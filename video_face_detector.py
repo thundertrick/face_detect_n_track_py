@@ -143,14 +143,14 @@ class VideoFaceDetector(object):
     def __detectFaceAroundRoi(self, frame):
         x, y, w, h = [int(i) for i in self._faceRoi]
         roiPatch = frame[y:y+h, x:x+w]
-        print (x, y, w, h)
-        if w <= 0 or y <= 0:
+        template_min_size = (int(self._trackedFace[2] * 8 / 10), int(self._trackedFace[3] * 8 / 10))
+        template_max_size = (int(self._trackedFace[2] * 12 / 10), int(self._trackedFace[2] * 12 / 10))
+        if x <= 0 or y <= 0 or w <= template_min_size[0] or h <= template_min_size[1]:
             self._templateMatchingRunning = False
             self._foundFace = False
             return
         self._allFaces = self._faceCascade.detectMultiScale(roiPatch, 1.1, 3, 0,
-            (int(self._trackedFace[2] * 8 / 10), int(self._trackedFace[3] * 8 / 10)),
-            (int(self._trackedFace[2] * 12 / 10), int(self._trackedFace[2] * 12 / 10)))
+            template_min_size, template_max_size)
 
         if len(self._allFaces) == 0:
             self._templateMatchingRunning = True
