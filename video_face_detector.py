@@ -15,7 +15,7 @@ class VideoFaceDetector(object):
         self._templateMatchingCurrentTime = 0
         self._foundFace = False
         self._scale = 0
-        self._resizedWidth = 320
+        self._resizedWidth = 128
         self._facePosition = None
         self._templateMatchingMaxDuration = 3
         
@@ -54,10 +54,9 @@ class VideoFaceDetector(object):
         return self._foundFace
 
 
-    def noFace(self):
-        return self._trackedFace is None
-
     def face(self):
+        if self._trackedFace is None:
+            return (0, 0, 0, 0)
         x, y, w, h = self._trackedFace
         x /= self._scale
         y /= self._scale
