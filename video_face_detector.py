@@ -54,6 +54,9 @@ class VideoFaceDetector(object):
         return self._foundFace
 
 
+    def noFace(self):
+        return self._trackedFace is None
+
     def face(self):
         x, y, w, h = self._trackedFace
         x /= self._scale
@@ -140,6 +143,11 @@ class VideoFaceDetector(object):
     def __detectFaceAroundRoi(self, frame):
         x, y, w, h = [int(i) for i in self._faceRoi]
         roiPatch = frame[y:y+h, x:x+w]
+        print (x, y, w, h)
+        if w <= 0 or y <= 0:
+            self._templateMatchingRunning = False
+            self._foundFace = False
+            return
         self._allFaces = self._faceCascade.detectMultiScale(roiPatch, 1.1, 3, 0,
             (int(self._trackedFace[2] * 8 / 10), int(self._trackedFace[3] * 8 / 10)),
             (int(self._trackedFace[2] * 12 / 10), int(self._trackedFace[2] * 12 / 10)))

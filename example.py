@@ -11,6 +11,9 @@ while True:
 
     frame = vfd.getFrameAndDetect()
 
+    if vfd.noFace():
+        continue
+
     if vfd.isFaceFound:
         x, y, w, h = [int(i) for i in vfd.face()]
         p1 = (x, y)
